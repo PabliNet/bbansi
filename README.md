@@ -91,18 +91,31 @@ The only addition to this customized input function is the ability to automatica
 ## Escapes
 
 `\\`    Backslash
+
 `\a`    Alert BELL
+
 `\b`    Backspace
+
 `\c`    Produce no further output
+
 `\e`    Escape
+
 `\f`    Form feed
+
 `\n`    New line
+
 `\r`    Carriage return
+
 `\t`    Horizontal tab
+
 `\v`    Vertical tab
+
 `\0NNN` Byte with octal value NNN (1 to 3 digits)
+
 `\xHH`  Byte with hexadecimal value HH (1 to 2 digits)
+
 `[[`    Opening square bracket
+
 `]]`    Closing square bracket
 
 ## flip function
