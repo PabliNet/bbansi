@@ -15,13 +15,12 @@ pip install bbansi
 Add APT Key with `curl`:
 
 ```bash
-curl -fsSL https://pablinet.github.io/apt/pablinet.gpg -o /etc/apt/trusted.gpg.d/pablinet.gpg 2> /dev/null && echo Ok! || echo "If you encounter any errors, please check the project's  \x1b[1mhttps://github.com/PabliNet/bbansi\x1b[0m"
-```
+curl -fsSL https://pablinet.github.io/apt/pablinet.gpg -o /etc/apt/trusted.gpg.d/pablinet.gpg```
 
 Add APT Key with `wget`:
 
 ~~~bash
-wget -O /etc/apt/trusted.gpg.d/pablinet.gpg https://pablinet.github.io/apt/pablinet.gpg  2> /dev/null && echo Ok! || echo "If you encounter any errors, please check the project's  \x1b[1mhttps://github.com/PabliNet/bbansi\x1b[0m"
+wget -O /etc/apt/trusted.gpg.d/pablinet.gpg https://pablinet.github.io/apt/pablinet.gpg
 ~~~
 
 Update and install:
