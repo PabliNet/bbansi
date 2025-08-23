@@ -523,4 +523,4 @@ def input(prompt=None):
     user_input = py_input()
     return user_input
 
-version = '0.0.1'
+version = '0.0.2'

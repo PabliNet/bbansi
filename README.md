@@ -11,11 +11,20 @@ pip install bbansi
 ```
 
 #### From APT as root or with `sudo`:
+
+**Add APT Key with `curl`:**
+
 ```bash
-(curl -fsSL https://pablinet.github.io/apt/pablinet.gpg -o /etc/apt/trusted.gpg.d/pablinet.gpg 2> /dev/null || wget -O /etc/apt/trusted.gpg.d/pablinet.gpg https://pablinet.github.io/apt/pablinet.gpg) && echo Ok! || echo "If you encounter any errors, please check the project's  \x1b[1mhttps://github.com/PabliNet/bbansi\x1b[0m"
+curl -fsSL https://pablinet.github.io/apt/pablinet.gpg -o /etc/apt/trusted.gpg.d/pablinet.gpg 2> /dev/null && echo Ok! || echo "If you encounter any errors, please check the project's  \x1b[1mhttps://github.com/PabliNet/bbansi\x1b[0m"
 ```
 
-Update and install:
+**Add APT Key with `wget`:**
+
+~~~bash
+wget -O /etc/apt/trusted.gpg.d/pablinet.gpg https://pablinet.github.io/apt/pablinet.gpg  2> /dev/null && echo Ok! || echo "If you encounter any errors, please check the project's  \x1b[1mhttps://github.com/PabliNet/bbansi\x1b[0m"
+~~~
+
+**Update and install:**
 
 ```
 apt update && apt install python3-bbansi
