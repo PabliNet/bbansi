@@ -12,25 +12,45 @@ pip install bbansi
 
 #### From APT as root or with `sudo`:
 
-**Add APT Key with `curl`:**
+Add APT Key with `curl`:
 
 ```bash
 curl -fsSL https://pablinet.github.io/apt/pablinet.gpg -o /etc/apt/trusted.gpg.d/pablinet.gpg 2> /dev/null && echo Ok! || echo "If you encounter any errors, please check the project's  \x1b[1mhttps://github.com/PabliNet/bbansi\x1b[0m"
 ```
 
-**Add APT Key with `wget`:**
+Add APT Key with `wget`:
 
 ~~~bash
 wget -O /etc/apt/trusted.gpg.d/pablinet.gpg https://pablinet.github.io/apt/pablinet.gpg  2> /dev/null && echo Ok! || echo "If you encounter any errors, please check the project's  \x1b[1mhttps://github.com/PabliNet/bbansi\x1b[0m"
 ~~~
 
-**Update and install:**
+Update and install:
 
 ```
 apt update && apt install python3-bbansi
 ```
 
 If you encounter any errors, please check the project's [GitHub repository](https://github.com/PabliNet/bbansi).
+
+## Command-line Interface (APT Version)
+
+The APT installation includes seven executable commands that accept BBANSI tags:
+
+`ef` (emulates the echo command)
+
+`capital`
+
+`capitalize`
+
+`invert`
+
+`lower`
+
+`title`
+
+`upper`
+
+For more information on the usage of these commands, use ef `-h` or `--help`.
 
 ## Usage
 
@@ -124,7 +144,7 @@ The flip function addresses a key limitation of standard string methods like .ca
 
 ### Examples
 
-**Standard string methods:**
+Standard string methods:
 
 ~~~python
 >>> string = '¡hello world!'
@@ -138,7 +158,7 @@ The flip function addresses a key limitation of standard string methods like .ca
 >>> print (repr(string.upper()))
 '\x1b[1MHELLO WORLD\x1b[0M'  # ANSI codes are affected
 ~~~
-**With the flip function:**
+With the flip function:
 ~~~python
 >>> string = '¡hello world!'
 >>> print (flip(string, 'capitalize')
