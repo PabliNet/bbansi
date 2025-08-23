@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bbansi"
-version = "0.0.2.post2"
+version = "0.0.3"
 description = "Module with print and input that convert pseudo-BBCode into ANSI. It also includes a flip option that improves the .capitalize(), .lower(), .title(), and .upper() methods, and adds an invert option."
 readme = "README.md"
 license = {text = "GNU General Public License v3.0"}

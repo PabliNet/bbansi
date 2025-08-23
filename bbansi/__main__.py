@@ -101,7 +101,7 @@ def main():
                 'd': 'Tenue',
                 'i': 'Cursiva',
                 'u': 'Subrayado',
-                'k': 'Parapadeo',
+                'k': 'Parpadeo',
                 'r': 'Modo inverso',
                 'h': 'Texto oculto',
                 's': 'Tachado'
@@ -198,9 +198,10 @@ def main():
     _end = '' if '--no-new-line' in flags else '\n'
     is_ansi = '--ansi' in flags
     if command in flip(option='tuple'):
-        print (flip(string, command), end=_end, reset=reset, ansi=is_ansi)
+        print (flip(string, command), end=_end, flush=True,
+               reset=reset, ansi=is_ansi)
     else:
-        print (string, end=_end, reset=reset, ansi=is_ansi)
+        print (string, end=_end, flush=True, reset=reset, ansi=is_ansi)
 
 if __name__ == '__main__':
     main()
