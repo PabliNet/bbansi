@@ -16,12 +16,13 @@ Add APT Key with `curl`:
 
 ```bash
 curl -fsSL https://pablinet.github.io/apt/pablinet.gpg -o /etc/apt/trusted.gpg.d/pablinet.gpg```
+```
 
 Add APT Key with `wget`:
 
-~~~bash
+```bash
 wget -O /etc/apt/trusted.gpg.d/pablinet.gpg https://pablinet.github.io/apt/pablinet.gpg
-~~~
+```
 
 Update and install:
 
@@ -53,13 +54,12 @@ For more information on the usage of these commands, use ef `-h` or `--help`.
 
 ## Usage
 
-```
+```python
 from bbansi import flip, input, print
 
 print (flip('[kb]wELCOME TO THIS EXAMPLE', 'invert'), reset=True)
 name = input ('r [b]What is your name? ')
 print (f'Your name is [171,15]{flip(name, 'capitalize')}[]')
-
 ```
 
 ### Expected Output
@@ -145,7 +145,7 @@ The flip function addresses a key limitation of standard string methods like .ca
 
 Standard string methods:
 
-~~~python
+```python
 >>> string = '¡hello world!'
 >>> print (string.capitalize())
 ¡hello world!  # The 'h' remains lowercase
@@ -156,9 +156,9 @@ Standard string methods:
 
 >>> print (repr(string.upper()))
 '\x1b[1MHELLO WORLD\x1b[0M'  # ANSI codes are affected
-~~~
+```
 With the flip function:
-~~~python
+```python
 >>> string = '¡hello world!'
 >>> print (flip(string, 'capitalize')
 ¡Hello world!  # Correctly capitalizes the first alphabetic character
@@ -175,9 +175,9 @@ With the flip function:
 
 >>> print (flip(string, 'upper'))
 '\x1b[1mHELLO WORLD\x1b[0m'  # All caps, ANSI untouched
-~~~
+```
 You can also use the first letter of each option (**c**apitalize, **i**nvert, **l**ower, **t**itle, or **u**pper) for a more concise syntax.
-~~~python
+```python
 >>> string = '¡hello world!'
 >>> print (flip(string, 'c')
 ¡Hello world!  # Correctly capitalizes the first alphabetic character
@@ -194,4 +194,4 @@ You can also use the first letter of each option (**c**apitalize, **i**nvert, **
 
 >>> print (flip(string, 'u'))
 '\x1b[1mHELLO WORLD\x1b[0m'  # All caps, ANSI untouched
-~~~
+```
