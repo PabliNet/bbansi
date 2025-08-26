@@ -176,3 +176,11 @@ cython_debug/
 *.swp
 debian/
 .pc
+
+capital
+capitalize
+ef
+invert
+lower
+title
+upper

@@ -3,9 +3,11 @@ from builtins import input as py_input
 #from builtins import print as py_print
 from locale import Error, LC_ALL, setlocale
 from os.path import realpath
+from pathlib import Path
 from sys import argv, exit, __stdout__, stdout
 from re import compile, match, search, split, sub
 from warnings import filterwarnings
+from time import sleep
 
 def silence_deprecation_warnings():
     """Desactiva DeprecationWarning y FutureWarning en todo el programa."""
@@ -334,27 +336,53 @@ def flip (string='', option=''):
 def parse_cmd (command=argv):
     FLAGS = {
         'a': '--ansi',
+        'd': r'--delay=[0-9]+(\.[0-9]+)?',
         'h': '--help',
         'n': '--no-new-line',
         'r': '--reset',
         'v': '--version'
     }
+    ptn_tm = r'[0-9]+(\.[0-9]+)?'
+
+    dict_flags = FLAGS.copy()
+    del(dict_flags['d'])
 
     is_flag = True
-    flags_key = FLAGS.keys()
-    options = FLAGS.values()
+    flags_key = dict_flags.keys()
+    options = dict_flags.values()
     #pattern_flags = r'-[{}]+'.format(''.join(flags_key))
 
     flags = []
     text = []
+    exist_delay = False
+    skip_next = False
 
-    for e in  command[1:]:
+    for i, e in  enumerate(command[:]):
+        if i == 0:
+            continue
         if is_flag:
             if e in options:
                 flags.append(e)
+            if skip_next:
+                skip_next = False
+                continue
             elif len(e) > 1 and set(e[1:]).issubset(flags_key):
                 for f in e[1:]:
                     flags.append(FLAGS[f])
+            elif (
+                (match(FLAGS['d'], e) or e == '-d' and i+1 < len(command)
+                  and match(ptn_tm, command[i+1])) and not exist_delay
+            ):
+                if match(FLAGS['d'], e):
+                    flags.append(e)
+                    exist_delay = True
+                elif (
+                    e == '-d' and i+1 < len(command) and
+                    match(ptn_tm, command[i+1])
+                ):
+                    flags.append(f'--delay={command[i+1]}')
+                    exist_delay = True
+                    skip_next = True
             else:
                 text.append(e)
                 is_flag = False
@@ -363,9 +391,7 @@ def parse_cmd (command=argv):
 
     flags = sorted(list(set(flags)))
 
-    return (
-        command[0].split('/')[-1].split('.')[0], tuple(flags), ' '.join(text)
-        )
+    return (Path(argv[0]).stem, tuple(flags), ' '.join(text))
 
 def is_active_styles(string):
     ANSI_PATTERN = compile(r'\x1b\[([\d;]*)m')
@@ -460,6 +486,7 @@ def print (*values,
            end='\n',
            file=None,
            flush=False,
+           delay=None, # delay sería un número str: /[0-9]+(\.[0-9]+)?/
            reset=False,
            ansi=False):
 
@@ -489,10 +516,32 @@ def print (*values,
 
     # Escritura en salida (archivo o consola)
     target = file if file is not None else __stdout__
-    target.write(values + end)
+    # parts = split(r'(\x1b\[[0-9;]*m)', values)
 
-    if flush:
-        target.flush()
+    if delay is not None and float(delay) > 0:
+        parts = split(r'(\x1b\[[0-9;]*m)', values)
+        for part in parts:
+            if not part:
+                continue
+            if part.startswith("\x1b["):
+                target.write(part)  # escape ANSI → de una
+            else:
+                for m in compile(r'(\s+|.)').finditer(part):
+                    token = m.group(0)
+                    if token.isspace():
+                        target.write(token)  # bloque whitespace → de una
+                    else:
+                        target.write(token)  # char → con delay
+                        if flush:
+                            target.flush()
+                        sleep(float(delay))
+        target.write(end)
+        if flush:
+            target.flush()
+    else:
+        target.write(values + end)
+        if flush:
+            target.flush()
 
 def input(prompt=None):
     """
@@ -523,4 +572,4 @@ def input(prompt=None):
     user_input = py_input()
     return user_input
 
-version = '0.0.3'
+version = '0.0.4'

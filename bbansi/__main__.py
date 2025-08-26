@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from os.path import realpath
 from sys import argv, exit
+from re import match
 try:
     from .core import ( bb_to_ansi, decode_selected_escapes, flip,
                        is_active_styles, language, parse_cmd, print,
@@ -36,6 +37,9 @@ def main():
                 'usage': 'Modo de uso: ',
                 'option': 'Opciones',
                 'ansi': ('  -a, --ansi', 'muestra el código ANSI'),
+                'delay': ('  -d [b]N[/b], --delay=[b]N[/b]   ',
+                          'Imprime el texto carácter por carácter con '
+                          'un retardo de [b]N[/b] segundos.'),
                 'nnl': ('  -n, --no-new-line',
                         'no enviar el carácter "salto de línea" al final'),
                 'reset': ('  -r, --reset',
@@ -49,6 +53,9 @@ def main():
                 'usage': 'Usage mode: ',
                 'option': 'Options',
                 'ansi': ('  -a, --ansi', 'show ANSI code'),
+                'delay': ('  -d N, --delay=[b]N[/b]   ',
+                          'Prints the text character by character with '
+                          'a delay of [b]N[/b] seconds.'),
                 'nnl': ('  -n, --no-new-line',
                         'do not output the trailing newline'),
                 'reset': ('  -r, --reset',
@@ -197,11 +204,18 @@ def main():
     reset = '--reset' in flags and is_active_styles(string)
     _end = '' if '--no-new-line' in flags else '\n'
     is_ansi = '--ansi' in flags
+
+    delay = None
+    for e in flags:
+        if e[:8] == '--delay=':
+            delay = e[8:]
+
     if command in flip(option='tuple'):
-        print (flip(string, command), end=_end, flush=True,
+        print (flip(string, command), end=_end, flush=True, delay=delay,
                reset=reset, ansi=is_ansi)
     else:
-        print (string, end=_end, flush=True, reset=reset, ansi=is_ansi)
+        print (string, end=_end, flush=True, delay=delay, reset=reset,
+               ansi=is_ansi)
 
 if __name__ == '__main__':
     main()
