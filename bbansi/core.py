@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 from builtins import input as py_input
-#from builtins import print as py_print
+from builtins import print as py_print
 from locale import Error, LC_ALL, setlocale
+from shutil import get_terminal_size
 from os.path import realpath
 from pathlib import Path
 from sys import argv, exit, __stdout__, stdout
@@ -333,6 +334,94 @@ def flip (string='', option=''):
     else:
         raise ValueError(err[LANG])
 
+def ansi_wrap (string:str, width:int=None):
+    # Separa ANSI, tabs, espacios y saltos de línea explícitos
+    if width is None:
+        from shutil import get_terminal_size
+        width = get_terminal_size().columns
+
+    # patrones
+    pattern = compile(r'(\x1b\[[0-9;]*m|\t| +|\n)')
+    p_ansi = compile(r'\x1b\[[0-9;]*m')
+    p_spaces = compile(r'\s+')
+    # detecta fondos, con o sin foreground: 48;5;Y o 38;5;X;48;5;Y
+    p_bg = compile(
+        r'(?:\x1b\[[0-9;]*38;5;\d+;48;5;\d+m|\x1b\[[0-9;]*48;5;\d+m)'
+    )
+
+    parts = [p for p in pattern.split(string) if p != '']
+
+    new_list = ['']
+    c = 0  # contador de ancho visible
+    active_bg = ''  # último fondo activo
+
+    for e in parts:
+        if p_ansi.fullmatch(e):
+            # si es código ANSI
+            if p_bg.fullmatch(e):
+                active_bg = e
+            elif e == '\x1b[49m':  # reset de fondo
+                active_bg = ''
+            new_list[-1] += e
+            continue
+
+        if e == '\t':
+            ws = 8 - (c % 8)
+            if c + ws > width:
+                if active_bg:
+                    new_list[-1] += '\x1b[49m'
+                new_list.append(active_bg)
+                c = 0
+            new_list[-1] += ' ' * ws
+            c += ws
+            continue
+
+        if e == '\n':
+            if active_bg:
+                new_list[-1] += '\x1b[49m'
+            new_list.append(active_bg)
+            c = 0
+            continue
+
+        if p_spaces.fullmatch(e):
+            if c + len(e) > width:
+                if active_bg:
+                    new_list[-1] += '\x1b[49m'
+                new_list.append(active_bg)
+                c = 0
+            else:
+                new_list[-1] += e
+                c += len(e)
+            continue
+
+        # palabra
+        if c + len(e) > width:
+            if active_bg:
+                new_list[-1] += '\x1b[49m'
+            new_list.append(active_bg)
+            c = 0
+        new_list[-1] += e
+        c += len(e)
+
+        # revisar si la palabra termina con un background
+        if p_bg.search(e[-20:]):  # chequear últimos 20 chars por seguridad
+            match = p_bg.search(e[-20:])
+            if match:
+                active_bg = match.group()
+
+    # limpiar línea vacía final
+    if new_list and new_list[-1] == '':
+        new_list = new_list[:-1]
+
+    # quitar TODOS los espacios finales de cada línea,
+    # preservando los códigos ANSI al final
+    cleaned = []
+    for line in new_list:
+        line = sub(r' +((?:\x1b\[[0-9;]*m)*)$', r'\1', line)
+        cleaned.append(line)
+
+    return '\n'.join(cleaned)
+
 def parse_cmd (command=argv):
     FLAGS = {
         'a': '--ansi',
@@ -340,7 +429,8 @@ def parse_cmd (command=argv):
         'h': '--help',
         'n': '--no-new-line',
         'r': '--reset',
-        'v': '--version'
+        'v': '--version',
+        'w': '--wrap'
     }
     ptn_tm = r'[0-9]+(\.[0-9]+)?'
 
@@ -487,6 +577,7 @@ def print (*values,
            file=None,
            flush=False,
            delay=None, # delay sería un número str: /[0-9]+(\.[0-9]+)?/
+           wrap=False,
            reset=False,
            ansi=False):
 
@@ -496,12 +587,15 @@ def print (*values,
       - ansi: muestra los códigos ANSI escapados (repr)
     """
 
+    count_list = len([x for x in values
+                      if isinstance(x, (dict, list, set, tuple))])
     # Convertimos todo a str primero (igual que hace print internamente)
     values = sep.join(str(v) for v in values)
 
     is_escape_square = not ansi
 
-    values = bb_to_ansi(values, is_escape_square=is_escape_square)
+    if count_list == 0:
+        values = bb_to_ansi(values, is_escape_square=is_escape_square)
 
     # Si hay reset, agregamos secuencia de reset
     if reset:
@@ -516,7 +610,9 @@ def print (*values,
 
     # Escritura en salida (archivo o consola)
     target = file if file is not None else __stdout__
-    # parts = split(r'(\x1b\[[0-9;]*m)', values)
+
+    if wrap:
+        values = ansi_wrap(values)
 
     if delay is not None and float(delay) > 0:
         parts = split(r'(\x1b\[[0-9;]*m)', values)
@@ -572,4 +668,4 @@ def input(prompt=None):
     user_input = py_input()
     return user_input
 
-version = '0.0.4'
+version = '0.1'

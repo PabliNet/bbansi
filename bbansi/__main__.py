@@ -3,12 +3,12 @@ from os.path import realpath
 from sys import argv, exit
 from re import match
 try:
-    from .core import ( bb_to_ansi, decode_selected_escapes, flip,
+    from .core import (bb_to_ansi, decode_selected_escapes, flip,
                        is_active_styles, language, parse_cmd, print,
                        silence_deprecation_warnings, version
     )
 except ImportError:
-    from core import ( bb_to_ansi, decode_selected_escapes, flip,
+    from core import (bb_to_ansi, decode_selected_escapes, flip,
                       is_active_styles, language, parse_cmd, print,
                       silence_deprecation_warnings, version
     )
@@ -45,8 +45,11 @@ def main():
                 'reset': ('  -r, --reset',
                           'restablece todos los estilos aplicados '
                           'al texto al final'),
+                'wrap': ('  -w, --wrap',
+                         'ajustar el texto para evitar el desbordamiento '
+                         'horizontal'),
                 'help': ('  -h, --help', 'muestra la ayuda y finaliza'),
-                'help': ('  -v, --version',
+                'version': ('  -v, --version',
                          'muestra la versión del programa y finaliza'),
             },
             'en': {
@@ -60,8 +63,10 @@ def main():
                         'do not output the trailing newline'),
                 'reset': ('  -r, --reset',
                           'reset styles and colors in the end of the string'),
+                'wrap': ('  -w, --wrap',
+                         'wrap text to avoid horizontal overflow'),
                 'help': ('  -h, --help', 'display this help and exit'),
-                'help': ('  -v, --version',
+                'version': ('  -v, --version',
                          'output version information and exit'),
             }
         }
@@ -205,6 +210,8 @@ def main():
     _end = '' if '--no-new-line' in flags else '\n'
     is_ansi = '--ansi' in flags
 
+    wrap = '--wrap' in flags
+
     delay = None
     for e in flags:
         if e[:8] == '--delay=':
@@ -212,10 +219,10 @@ def main():
 
     if command in flip(option='tuple'):
         print (flip(string, command), end=_end, flush=True, delay=delay,
-               reset=reset, ansi=is_ansi)
+               wrap=wrap, reset=reset, ansi=is_ansi)
     else:
-        print (string, end=_end, flush=True, delay=delay, reset=reset,
-               ansi=is_ansi)
+        print (string, end=_end, flush=True, delay=delay, wrap=wrap,
+               reset=reset, ansi=is_ansi)
 
 if __name__ == '__main__':
     main()
