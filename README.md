@@ -76,7 +76,7 @@ Raw Output:
 
 ## print function
 
-The print function has been extended with two optional boolean parameters: reset and ansi.
+The print function has been extended with four optional parameters: delay, wrap, reset and ansi.
 
 * **delay:** The parameter `delay` must match the pattern `/[0-9]+(\.[0-9]+)?/`.  
 When provided, the output is printed character by character with a delay of `delay` seconds between each character.
