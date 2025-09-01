@@ -81,6 +81,8 @@ The print function has been extended with two optional boolean parameters: reset
 * **delay:** The parameter `delay` must match the pattern `/[0-9]+(\.[0-9]+)?/`.  
 When provided, the output is printed character by character with a delay of `delay` seconds between each character.
 
+* **wrap:** A boolean. If set to True, it activates "word wrapper" mode by word.
+
 * **reset:** When set to True, the ANSI reset sequence `'\x1b\[0m'` is automatically appended to the end of the output, ensuring that subsequent text does not retain any applied styling.
 
 * **ansi:** When set to True, the ANSI escape codes are rendered explicitly in the output, similar to the behavior of the `repr()` function.
