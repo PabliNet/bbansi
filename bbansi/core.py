@@ -6,7 +6,7 @@ from shutil import get_terminal_size
 from os.path import realpath
 from pathlib import Path
 from sys import argv, exit, __stdout__, stdout
-from re import compile, match, search, split, sub
+from re import compile, escape, match, search, split, sub
 from warnings import filterwarnings
 from time import sleep
 
@@ -569,7 +569,29 @@ def decode_selected_escapes(s: str) -> str:
 
     return sub(esc_pattern, replacer, s)
 
-in_ansi = lambda string, boolean: repr(string) if boolean else string
+def in_ansi (string, boolean):
+    ESCAPES = {
+        r'\\': r'\\\\',
+        r'\a': r'\\a',
+        r'\b': r'\\b',
+        r'\c': r'\\c',
+        r'\e': r'\\e',
+        r'\f': r'\\f',
+        r'\n': r'\\n',
+        r'\r': r'\\r',
+        r'\t': r'\\t',
+        r'\v': r'\\v',
+    }
+
+    # Generar el patrón para encontrar los escapes
+    pattern = r'(' + '|'.join(escape(k) for k in ESCAPES) + r')'
+
+    if boolean:
+        # Reemplazar usando el diccionario
+        string = sub(pattern, lambda s: ESCAPES[s.group(0)], string)
+        string = repr(string)
+
+    return string
 
 def print (*values,
            sep=' ',
@@ -594,6 +616,7 @@ def print (*values,
 
     is_escape_square = not ansi
 
+    # Si no es dict, list, set, ni tuple…
     if count_list == 0:
         values = bb_to_ansi(values, is_escape_square=is_escape_square)
 
@@ -604,17 +627,10 @@ def print (*values,
     # Si ansi=True, mostramos los códigos como texto escapado
     values = in_ansi(values, ansi)
 
-    # Si el destino es un archivo, limpiamos secuencias ANSI
-    if file is not None and not ansi:
-        values = sub(r'\x1b\[[0-9;]*m', '', values)
-
-    # Escritura en salida (archivo o consola)
-    target = file if file is not None else __stdout__
-
-    if wrap:
+    if wrap and file is None:
         values = ansi_wrap(values)
 
-    if delay is not None and float(delay) > 0:
+    if delay is not None and float(delay) > 0 and not ansi:
         parts = split(r'(\x1b\[[0-9;]*m)', values)
         for part in parts:
             if not part:
@@ -668,4 +684,4 @@ def input(prompt=None):
     user_input = py_input()
     return user_input
 
-version = '0.1'
+version = '0.2'
