@@ -627,6 +627,9 @@ def print (*values,
     # Si ansi=True, mostramos los códigos como texto escapado
     values = in_ansi(values, ansi)
 
+    # Escritura en salida (archivo o consola)
+    target = file if file is not None else __stdout__
+
     if wrap and file is None:
         values = ansi_wrap(values)
 
