@@ -334,7 +334,7 @@ def flip (string='', option=''):
     else:
         raise ValueError(err[LANG])
 
-def ansi_wrap (string:str, width:int=None):
+def ansi_wrap(string: str, width: int = None):
     # Separa ANSI, tabs, espacios y saltos de línea explícitos
     if width is None:
         from shutil import get_terminal_size
@@ -344,9 +344,9 @@ def ansi_wrap (string:str, width:int=None):
     pattern = compile(r'(\x1b\[[0-9;]*m|\t| +|\n)')
     p_ansi = compile(r'\x1b\[[0-9;]*m')
     p_spaces = compile(r'\s+')
-    # detecta fondos, con o sin foreground: 48;5;Y o 38;5;X;48;5;Y
+    # detecta cualquier fondo ANSI (40–47, 48;5;Y, 48;2;R;G;B, 49)
     p_bg = compile(
-        r'(?:\x1b\[[0-9;]*38;5;\d+;48;5;\d+m|\x1b\[[0-9;]*48;5;\d+m)'
+        r'\x1b\[(?:[0-9;]*;)?(?:48;(?:5;\d+|2;\d+;\d+;\d+)|4[0-7]|49)(?:;[0-9;]*)?m'
     )
 
     parts = [p for p in pattern.split(string) if p != '']
@@ -359,9 +359,10 @@ def ansi_wrap (string:str, width:int=None):
         if p_ansi.fullmatch(e):
             # si es código ANSI
             if p_bg.fullmatch(e):
-                active_bg = e
-            elif e == '\x1b[49m':  # reset de fondo
-                active_bg = ''
+                if e == '\x1b[49m':  # reset de fondo
+                    active_bg = ''
+                else:
+                    active_bg = e
             new_list[-1] += e
             continue
 
@@ -404,9 +405,11 @@ def ansi_wrap (string:str, width:int=None):
         c += len(e)
 
         # revisar si la palabra termina con un background
-        if p_bg.search(e[-20:]):  # chequear últimos 20 chars por seguridad
-            match = p_bg.search(e[-20:])
-            if match:
+        match = p_bg.search(e[-20:])  # chequear últimos 20 chars
+        if match:
+            if match.group() == '\x1b[49m':
+                active_bg = ''
+            else:
                 active_bg = match.group()
 
     # limpiar línea vacía final
