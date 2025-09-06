@@ -47,7 +47,7 @@ Make the installer executable:
 chmod +x install-sh
 ```
 
-Run it (as `root` or with `sudo`)
+Run it (as `root` or with `sudo`):
 
 ```bash
 ./install-sh
