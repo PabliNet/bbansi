@@ -32,33 +32,25 @@ apt update && apt install python3-bbansi
 
 If you encounter any errors, please check the project's [GitHub repository](https://github.com/PabliNet/bbansi).
 
-#### Manually install commands from GitHub
+#### Manual installation of commands from GitHub
 
-Clone a GitHub repository:
+Clone the repository and enter the directory:
 
 ```bash
 git clone https://github.com/PabliNet/bbansi
-```
-
-Change into the `bbansi` directory:
-
-```bash
 cd bbansi
 ```
 
-To make the script executable, run the following command in your terminal:
+Make the installer executable:
 
 ```bash
 chmod +x install-sh
-```
 
-As `root` or with `sudo`:
-
-```bash
+Run it (as `root` or with `sudo`)
 ./install-sh
 ```
 
-## Command-line Interface (APT Version)
+## Command-line Interface (APT Version or manual installation)
 
 The APT installation includes seven executable commands that accept BBANSI tags:
 
