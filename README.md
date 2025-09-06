@@ -60,13 +60,19 @@ Clone a GitHub repository:
 git clone https://github.com/PabliNet/bbansi
 ```
 
-Change into the bbansi directory
+Change into the `bbansi` directory:
 
 ```bash
 cd bbansi
 ```
 
-As `root` or with `sudo`
+To make the script executable, run the following command in your terminal:
+
+```bash
+chmod +x install-sh
+```
+
+As `root` or with `sudo`:
 
 ```bash
 ./install-sh
