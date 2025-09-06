@@ -7,7 +7,7 @@ if [ "$(id -u)" -eq 0 ]; then
     for link in capital capitalize ef invert lower title upper; do
         cat > "/usr/local/bin/$link" <<EOF
 #!/bin/sh
-PYTHONPATH=/opt exec python3 -m bbansi $link "\$@"
+PYTHONPATH=/opt exec python3 -m bbansi "\$@"
 EOF
         chmod +x "/usr/local/bin/$link"
     done
