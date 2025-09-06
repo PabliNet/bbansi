@@ -690,4 +690,4 @@ def input(prompt=None):
     user_input = py_input()
     return user_input
 
-version = '0.2'
+version = '0.3'

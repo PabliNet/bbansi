@@ -1,0 +1,20 @@
+#!/bin/sh
+x='bbansi'
+
+if [ "$(id -u)" -eq 0 ]; then
+    cp -ru "$x" /opt/
+
+    for link in capital capitalize ef invert lower title upper; do
+        cat > "/usr/local/bin/$link" <<EOF
+#!/bin/sh
+PYTHONPATH=/opt exec python3 -m bbansi $link "\$@"
+EOF
+        chmod +x "/usr/local/bin/$link"
+    done
+else
+    case "$LANG" in
+        es*) echo -e '\033[1;38;5;196mError:\033[22m Se requiere ser root o tener permisos de superusuario.\033[0m' ;;
+        *) echo -e '\033[1;38;5;196mError:\033[22m Requires root access or superuser permissions.\033[0m' ;;
+    esac
+    exit 1
+fi

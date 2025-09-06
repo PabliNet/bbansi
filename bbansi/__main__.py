@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from os.path import realpath
-from sys import argv, exit
+from sys import argv, exit, stdin
 from re import match
 try:
     from .core import (bb_to_ansi, decode_selected_escapes, flip,
@@ -15,6 +15,12 @@ except ImportError:
 
 def main():
     silence_deprecation_warnings()
+
+    # Si hay datos en stdin, agregarlos a argv
+    if not stdin.isatty():
+        data = stdin.read().strip()
+        if data:
+            argv.append(data)
 
     command, flags, string = parse_cmd(argv)
 
