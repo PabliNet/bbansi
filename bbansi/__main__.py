@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from os.path import realpath
-from sys import argv, exit, stdin
+from pathlib import Path
+from sys import exit, stdin
 from re import match
 try:
     from .core import (bb_to_ansi, decode_selected_escapes, flip,
@@ -14,6 +15,7 @@ except ImportError:
     )
 
 def main():
+    from sys import argv
     silence_deprecation_warnings()
 
     # Si hay datos en stdin, agregarlos a argv
@@ -22,15 +24,22 @@ def main():
         if data:
             argv.append(data)
 
-    command, flags, string = parse_cmd(argv)
+    REAL_FILE = realpath(__file__)
 
-    REAL_FILE = realpath(__file__).split('/')[-1].split('.')[0]
+    if (
+        len(argv) > 1 and
+        argv[0] == REAL_FILE and
+        Path(argv[1]).stem in flip(option='tuple')
+    ):
+        argv = argv[1:]
+
+    command, flags, string = parse_cmd(argv)
 
     all_cmd = list(flip(option='tuple'))
     all_cmd.extend(['echof', 'ef'])
     all_cmd.sort()
 
-    if (command == REAL_FILE and not REAL_FILE in all_cmd
+    if (argv[0] == REAL_FILE and not REAL_FILE in all_cmd
             or any(e in flags for e in ('-h', '--help', '--version'))):
         lang = language()
 

@@ -5,7 +5,7 @@ from locale import Error, LC_ALL, setlocale
 from shutil import get_terminal_size
 from os.path import realpath
 from pathlib import Path
-from sys import argv, exit, __stdout__, stdout
+from sys import exit, __stdout__, stdout
 from re import compile, escape, match, search, split, sub
 from warnings import filterwarnings
 from time import sleep
@@ -425,7 +425,7 @@ def ansi_wrap(string: str, width: int = None):
 
     return '\n'.join(cleaned)
 
-def parse_cmd (command=argv):
+def parse_cmd (command):
     FLAGS = {
         'a': '--ansi',
         'd': r'--delay=[0-9]+(\.[0-9]+)?',
@@ -484,7 +484,7 @@ def parse_cmd (command=argv):
 
     flags = sorted(list(set(flags)))
 
-    return (Path(argv[0]).stem, tuple(flags), ' '.join(text))
+    return (Path(command[0]).stem, tuple(flags), ' '.join(text))
 
 def is_active_styles(string):
     ANSI_PATTERN = compile(r'\x1b\[([\d;]*)m')
