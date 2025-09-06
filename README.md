@@ -32,26 +32,6 @@ apt update && apt install python3-bbansi
 
 If you encounter any errors, please check the project's [GitHub repository](https://github.com/PabliNet/bbansi).
 
-## Command-line Interface (APT Version)
-
-The APT installation includes seven executable commands that accept BBANSI tags:
-
-`ef` (emulates the echo command)
-
-`capital`
-
-`capitalize`
-
-`invert`
-
-`lower`
-
-`title`
-
-`upper`
-
-For more information on the usage of these commands, use ef `-h` or `--help`.
-
 #### Manually install commands from GitHub
 
 Clone a GitHub repository:
@@ -77,6 +57,26 @@ As `root` or with `sudo`:
 ```bash
 ./install-sh
 ```
+
+## Command-line Interface (APT Version)
+
+The APT installation includes seven executable commands that accept BBANSI tags:
+
+`ef` (emulates the echo command)
+
+`capital`
+
+`capitalize`
+
+`invert`
+
+`lower`
+
+`title`
+
+`upper`
+
+For more information on the usage of these commands, use ef `-h` or `--help`.
 
 ## Usage
 
