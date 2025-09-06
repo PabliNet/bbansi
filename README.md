@@ -52,6 +52,26 @@ The APT installation includes seven executable commands that accept BBANSI tags:
 
 For more information on the usage of these commands, use ef `-h` or `--help`.
 
+#### Manually install commands from GitHub
+
+Clone a GitHub repository:
+
+```bash
+git clone https://github.com/PabliNet/bbansi
+```
+
+Change into the bbansi directory
+
+```bash
+cd bbansi
+```
+
+As `root` or with `sudo`
+
+```bash
+./install-sh
+```
+
 ## Usage
 
 ```python
