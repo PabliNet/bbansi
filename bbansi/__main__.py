@@ -26,20 +26,20 @@ def main():
 
     REAL_FILE = realpath(__file__)
 
+    all_cmd = list(flip(option='tuple'))
+    all_cmd.extend(['echof', 'ef'])
+    all_cmd.sort()
+
     if (
         len(argv) > 1 and
         argv[0] == REAL_FILE and
-        Path(argv[1]).stem in flip(option='tuple')
+        Path(argv[1]).stem in all_cmd
     ):
         argv = argv[1:]
 
     command, flags, string = parse_cmd(argv)
 
-    all_cmd = list(flip(option='tuple'))
-    all_cmd.extend(['echof', 'ef'])
-    all_cmd.sort()
-
-    if (argv[0] == REAL_FILE and not REAL_FILE in all_cmd
+    if (argv[0] == REAL_FILE and not command in all_cmd
             or any(e in flags for e in ('-h', '--help', '--version'))):
         lang = language()
 
