@@ -4,13 +4,13 @@ Module with custom print and input functions that convert **pseudo-BBCode** into
 
 ## Installation
 
-#### From PyPI:
+#### From PyPI
 
 ```bash
 pip install bbansi
 ```
 
-#### From APT as root or with `sudo`:
+#### From APT as root or with `sudo`
 
 Add APT Repository:
 ```bash
