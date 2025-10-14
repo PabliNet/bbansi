@@ -12,10 +12,15 @@ pip install bbansi
 
 #### From APT as root or with `sudo`:
 
+Add APT Repository:
+```bash
+echo deb https://pablinet.github.io/apt ./ > /etc/apt/sources.list.d/pablinet.list
+```
+
 Add APT Key with `curl`:
 
 ```bash
-curl -fsSL https://pablinet.github.io/apt/pablinet.gpg -o /etc/apt/trusted.gpg.d/pablinet.gpg```
+curl -fsSL https://pablinet.github.io/apt/pablinet.gpg -o /etc/apt/trusted.gpg.d/pablinet.gpg
 ```
 
 Add APT Key with `wget`:
@@ -26,7 +31,7 @@ wget -O /etc/apt/trusted.gpg.d/pablinet.gpg https://pablinet.github.io/apt/pabli
 
 Update and install:
 
-```
+```bash
 apt update && apt install python3-bbansi
 ```
 
